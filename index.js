@@ -48,9 +48,26 @@ const utils = {
               exerciceArray[position - 1],
               exerciceArray[position],
             ];
-            console.log(exerciceArray);
+            page.lobby();
           } else {
             position++;
+          }
+        });
+      });
+    });
+  },
+  deleteItem: function () {
+    document.querySelectorAll(".deleteBtn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        // Attention à ne pas utiliser la méthode delete de js car on supprime l'entrée(index + valeur)
+        // donc on ne peut pas supprimer 2 fois la meme position sur la vue
+        let newArray = [];
+        exerciceArray.map((exo) => {
+          if (exo.pic != e.target.dataset.pic) {
+            newArray.push(exo);
+            exerciceArray = newArray;
+            console.log(exerciceArray);
+            page.lobby();
           }
         });
       });
@@ -85,6 +102,7 @@ const page = {
     );
     utils.handleEventMinutes();
     utils.handleEventArrow();
+    utils.deleteItem();
   },
 
   routine: function () {
