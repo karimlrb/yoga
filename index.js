@@ -1,6 +1,5 @@
 const main = document.querySelector("main");
-
-let exerciceArray = [
+const basicArray = [
   { pic: 0, min: 1 },
   { pic: 1, min: 1 },
   { pic: 2, min: 1 },
@@ -12,6 +11,19 @@ let exerciceArray = [
   { pic: 8, min: 1 },
   { pic: 9, min: 1 },
 ];
+
+let exerciceArray = [];
+
+// Si user vient pour la première fois, exerciceArray = basicArray, sinon on lui donne la valeur du locale storage
+//  On récupère le tableau stocké
+// syntaxe d'une fct anonyme qui se lance seule une fois après elle se relance plus
+(() => {
+  if (localStorage.exercices) {
+    exerciceArray = JSON.parse(localStorage.exercices);
+  } else {
+    exerciceArray = basicArray;
+  }
+})();
 
 class Exercice {}
 
@@ -29,7 +41,7 @@ const utils = {
           // Attention avec le === ca ne marche pas, RIP les 30 min à débuguer.. string!=number (e.target.id est une string)
           if (exo.pic == e.target.id) {
             exo.min = parseInt(e.target.value);
-            // console.log(exerciceArray);
+            this.storage();
           }
         });
       });
@@ -49,6 +61,7 @@ const utils = {
               exerciceArray[position],
             ];
             page.lobby();
+            this.storage();
           } else {
             position++;
           }
@@ -56,6 +69,7 @@ const utils = {
       });
     });
   },
+
   deleteItem: function () {
     document.querySelectorAll(".deleteBtn").forEach((btn) => {
       btn.addEventListener("click", (e) => {
@@ -68,10 +82,21 @@ const utils = {
             exerciceArray = newArray;
             console.log(exerciceArray);
             page.lobby();
+            this.storage();
           }
         });
       });
     });
+  },
+
+  reboot: function () {
+    exerciceArray = basicArray;
+    page.lobby();
+    this.storage();
+  },
+
+  storage: function () {
+    localStorage.exercices = JSON.stringify(exerciceArray);
   },
 };
 
@@ -103,6 +128,8 @@ const page = {
     utils.handleEventMinutes();
     utils.handleEventArrow();
     utils.deleteItem();
+    // un id btn, input[type="checkbox"], i pas besoin de déclarer en js
+    reboot.addEventListener("click", () => utils.reboot());
   },
 
   routine: function () {
