@@ -130,6 +130,7 @@ const page = {
     utils.deleteItem();
     // un id btn, input[type="checkbox"], i pas besoin de déclarer en js
     reboot.addEventListener("click", () => utils.reboot());
+    start.addEventListener("click", () => this.routine());
   },
 
   routine: function () {
